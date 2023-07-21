@@ -8,6 +8,6 @@ namespace UtilityBot.Models
 {
     public class Session
     {
-        public string FunctionCode { get; set; }
+        public string ActionCode { get; set; }
     }
 }

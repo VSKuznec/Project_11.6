@@ -21,22 +21,24 @@ namespace UtilityBot.Controllers
             _memoryStorage = memoryStorage;
         }
 
-        public async Task Handle(CallbackQuery? callbackQuery, CancellationToken ct)
+        public async Task<string> Handle(CallbackQuery? callbackQuery, CancellationToken ct)
         {
             if (callbackQuery?.Data == null)
-                return;
+                return null;
 
-            _memoryStorage.GetSession(callbackQuery.From.Id).FunctionCode = callbackQuery.Data;
+            _memoryStorage.GetSession(callbackQuery.From.Id).ActionCode = callbackQuery.Data;
 
-            string functionText = callbackQuery.Data switch
+            string actionText = callbackQuery.Data switch
             {
                 "Символы" => "Посчитать символы",
                 "Числа" => "Посчитать сумму",
                 _ => String.Empty
             };
 
-            await _telegramClient.SendTextMessageAsync(callbackQuery.From.Id, $"<b>Функция бота - {functionText}.{Environment.NewLine}</b>" +
+            await _telegramClient.SendTextMessageAsync(callbackQuery.From.Id, $"<b>Функция бота - {actionText}.{Environment.NewLine}</b>" +
                 $"{Environment.NewLine}Можно поменять в главном меню.", cancellationToken: ct, parseMode: ParseMode.Html);
+
+            return actionText;
         }
     }
 }

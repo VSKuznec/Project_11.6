@@ -15,7 +15,7 @@ using UtilityBot.Controllers;
 
 namespace UtilityBot.Services
 {
-    public class Symbols
+    public class Symbols : ISymbols
     {
         private readonly ITelegramBotClient _telegramClient;
 
@@ -23,7 +23,7 @@ namespace UtilityBot.Services
         {
             _telegramClient = telegramClient;
         }
-        async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+        public async Task CoutingChars(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
             {
                 Console.WriteLine($"Контроллер {GetType().Name} получил сообщение");

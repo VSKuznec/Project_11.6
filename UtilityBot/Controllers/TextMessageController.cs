@@ -11,16 +11,19 @@ using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types.Enums;
 using UtilityBot.Configuration;
+using UtilityBot.Services;
 
 namespace UtilityBot.Controllers
 {
     public class TextMessageController
     {
         private readonly ITelegramBotClient _telegramClient;
+        private readonly IStorage _memoryStorage;
 
-        public TextMessageController(ITelegramBotClient telegramBotClient)
+        public TextMessageController(ITelegramBotClient telegramBotClient, IStorage memoryStorage)
         {
             _telegramClient = telegramBotClient;
+            _memoryStorage = memoryStorage;
         }
 
         public async Task Handle(Message message, CancellationToken ct)

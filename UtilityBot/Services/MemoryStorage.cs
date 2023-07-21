@@ -25,7 +25,7 @@ namespace UtilityBot.Services
 
             var newSession = new Session()
             {
-                FunctionCode = "Символы"
+                ActionCode = "Символы"
             };
             _sessions.TryAdd(chatId, newSession);
             return newSession;

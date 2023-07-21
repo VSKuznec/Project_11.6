@@ -8,6 +8,7 @@ using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using UtilityBot.Services;
 
 
 namespace UtilityBot
@@ -18,13 +19,18 @@ namespace UtilityBot
         private InlineKeyboardController _inlineKeyboardController;
         private TextMessageController _textMessageController;
         private DefaultMessageController _defaultMessageController;
+        private ISymbols _symbolsServices;
+        private INumbers _numbersServices;
 
-        public Bot(ITelegramBotClient telegramClient, InlineKeyboardController inlineKeyboardController, TextMessageController textMessageController, DefaultMessageController defaultMessageController)
+
+        public Bot(ITelegramBotClient telegramClient, InlineKeyboardController inlineKeyboardController, TextMessageController textMessageController, DefaultMessageController defaultMessageController, ISymbols symbolsServices, INumbers numbersServices)
         {
             _telegramClient = telegramClient;
             _inlineKeyboardController = inlineKeyboardController;
             _textMessageController = textMessageController;
             _defaultMessageController = defaultMessageController;
+            _symbolsServices = symbolsServices;
+            _numbersServices = numbersServices;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -38,11 +44,13 @@ namespace UtilityBot
             Console.WriteLine("Бот запущен");
         }
 
+        public string ActionCommand { get; set; }
+
         async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
             if (update.Type == UpdateType.CallbackQuery)
             {
-                await _inlineKeyboardController.Handle(update.CallbackQuery, cancellationToken);
+                ActionCommand = await _inlineKeyboardController.Handle(update.CallbackQuery, cancellationToken);
                 return;
             }
 
@@ -51,11 +59,31 @@ namespace UtilityBot
                 switch (update.Message!.Type)
                 {
                     case MessageType.Text:
+                        if (ActionCommand != null)
+                        {
+                            CommandHandler(botClient, update, cancellationToken, ActionCommand);
+                        }
                         await _textMessageController.Handle(update.Message, cancellationToken);
                         return;
                     default:
                         await _defaultMessageController.Handle(update.Message, cancellationToken);
                         return;
+                }
+            }
+        }
+
+        async Task CommandHandler(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken, string actionCommand)
+        {
+            if (update.Type == UpdateType.Message)
+            {
+                if (actionCommand == "Посчитать символы")
+                {
+                    await _symbolsServices.CoutingChars(botClient, update, cancellationToken);
+                }
+
+                if ((actionCommand == "Посчитать сумму"))
+                {
+                    await _numbersServices.SummingNumbers(botClient, update, cancellationToken);
                 }
             }
         }
