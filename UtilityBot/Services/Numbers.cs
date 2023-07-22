@@ -29,7 +29,7 @@ namespace UtilityBot.Services
             try
             {
                 string s = update.Message.Text;
-                if (s == "Посчитать сумму")
+                if (s == update.Message.Text)
                 {
                     string[] subs = s.Split(' ');
 
