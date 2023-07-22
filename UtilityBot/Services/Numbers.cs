@@ -18,7 +18,7 @@ namespace UtilityBot.Services
     {
         private readonly ITelegramBotClient _telegramClient;
 
-        public Numbers(ITelegramBotClient telegramClient, int Calc)
+        public Numbers(ITelegramBotClient telegramClient)
         {
             _telegramClient = telegramClient;
         }

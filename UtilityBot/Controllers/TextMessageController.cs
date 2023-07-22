@@ -43,9 +43,6 @@ namespace UtilityBot.Controllers
                         $"{Environment.NewLine}Отправьте текст или числа через пробел для получения результата, но сначала выберите одну из функций бота.{Environment.NewLine}", cancellationToken: ct, parseMode: ParseMode.Html, replyMarkup: new InlineKeyboardMarkup(buttons));
 
                     break;
-                default:
-                    await _telegramClient.SendTextMessageAsync(message.Chat.Id, "Отправьте мне сообщение для обработки.", cancellationToken: ct);
-                    break;
             }
         }
     }
